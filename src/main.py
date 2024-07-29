@@ -1,5 +1,6 @@
 from textnode import TextNode
-from htmlnode import HTMLNode
+from htmlnode import HTMLNode, LeafNode
+
 
 def main():
     my_node = TextNode("hello world", "bold")
@@ -7,17 +8,18 @@ def main():
     my_node3 = TextNode("hello world", "bold", "www.google.com")
 
     test_props = {
-    "href": "https://www.google.com", 
-    "target": "_blank",
+    "href": "https://www.google.com"
     }
 
     html_node = HTMLNode(tag="h1", value="idk", props=test_props)
     h_node = HTMLNode()
-    print(h_node)
-    print(html_node)
+    leaf_node = LeafNode(tag="a", props=test_props, value="some text here")
+    print(leaf_node.to_html())
+    #print(h_node)
+    #print(html_node)
 
-    print("equals", my_node == my_node2)
-    print("equals2", my_node2 == my_node3)
-    print(my_node, my_node2, my_node3)
+    #print("equals", my_node == my_node2)
+    #print("equals2", my_node2 == my_node3)
+    #print(my_node, my_node2, my_node3)
 
 main()
