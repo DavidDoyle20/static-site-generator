@@ -1,4 +1,4 @@
-from textnode import TextNode
+from textnode import TextNode, split_nodes_delimiter
 from htmlnode import HTMLNode, LeafNode, ParentNode
 
 
@@ -27,12 +27,10 @@ def main():
     html_node = HTMLNode(tag="h1", value="idk", props=test_props)
     h_node = HTMLNode()
     leaf_node = LeafNode(tag="a", props=test_props, value="some text here")
-    #print(leaf_node.to_html())
-    #print(h_node)
-    #print(html_node)
 
-    #print("equals", my_node == my_node2)
-    #print("equals2", my_node2 == my_node3)
-    #print(my_node, my_node2, my_node3)
+    print("This is code block` word".split("`"))
 
+    node2 = TextNode("This is text with a `code block` word", "text")
+    new_nodes = split_nodes_delimiter([node2], "`", "code")
+    print(new_nodes)
 main()

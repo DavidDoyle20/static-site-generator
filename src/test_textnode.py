@@ -1,6 +1,6 @@
 import unittest
 
-from textnode import TextNode, text_node_to_html_node
+from textnode import TextNode, text_node_to_html_node, split_nodes_delimiter
 from htmlnode import HTMLNode
 
 
@@ -64,6 +64,54 @@ class TestTextNode(unittest.TestCase):
         node = TextNode("this is a text node", "invalid")
         with self.assertRaises(Exception):
             text_node_to_html_node(node)
+
+    #tests for split_nodes_delimiter
+    def test_split_bold(self):
+        node = TextNode("This is text with a **bold block** word", "text")
+        new_nodes = split_nodes_delimiter([node], "**", "bold")
+        self.assertEqual(new_nodes, [TextNode("This is text with a ", "text"),
+                                     TextNode("bold block", "bold"),
+                                     TextNode(" word", "text")])
+    def test_split_italic(self):
+        node = TextNode("This is text with a *italic block* word", "text")
+        new_nodes = split_nodes_delimiter([node], "*", "italic")
+        self.assertEqual(new_nodes, [TextNode("This is text with a ", "text"),
+                                     TextNode("italic block", "italic"),
+                                     TextNode(" word", "text")]) 
+    def test_split_code(self):
+        node = TextNode("This is text with a `code block` word", "text")
+        new_nodes = split_nodes_delimiter([node], "`", "code")
+        self.assertEqual(new_nodes, [TextNode("This is text with a ", "text"),
+                                     TextNode("code block", "code"),
+                                     TextNode(" word", "text")])
+    def test_split_multiple(self):
+        node = TextNode("This is text with a *block* and *another block* in it", "text")
+        new_nodes = split_nodes_delimiter([node], "*", "italic")
+        self.assertEqual(new_nodes, [TextNode("This is text with a ", "text"),
+                                     TextNode("block", "italic"),
+                                     TextNode(" and ", "text"),
+                                     TextNode("another block", "italic"),
+                                     TextNode(" in it", "text")])
+    def test_split_none(self):
+        node = TextNode("This is text with a word", "text")
+        new_nodes = split_nodes_delimiter([node], "aaaaa", "bold")
+        self.assertEqual(new_nodes, [TextNode("This is text with a word", "text")])
+    def test_split_not_closed(self):
+        node = TextNode("This is text with a **bold block word", "text")
+        with self.assertRaises(Exception):
+            new_nodes = split_nodes_delimiter([node], "**", "bold")
+    def test_split_back_to_back(self):
+        node = TextNode("This is text with a `code``code`", "text")
+        new_nodes = split_nodes_delimiter([node], "`", "code")
+        self.assertEqual(new_nodes, [TextNode("This is text with a ", "text"),
+                                     TextNode("code", "code"),
+                                     TextNode("code", "code")])
+    def test_split_front_and_back(self):
+        node = TextNode("`code` This is text with a `code`", "text")
+        new_nodes = split_nodes_delimiter([node], "`", "code")
+        self.assertEqual(new_nodes, [TextNode("code", "code"),
+                                     TextNode(" This is text with a ", "text"),
+                                     TextNode("code", "code")])
 
 if __name__ == "__main__":
     unittest.main()
