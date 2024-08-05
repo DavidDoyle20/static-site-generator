@@ -18,6 +18,9 @@ class HTMLNode:
     def __repr__(self):
         return f"HTMLNode({self.tag}, {self.value}, {self.children}, {self.props})"
     
+    def __eq__(self, other_node):
+        return self.tag == other_node.tag and self.value == other_node.value and self.children == other_node.children and self.props == other_node.props
+    
 class LeafNode(HTMLNode):
     def __init__(self, tag, value, props=None):
         super().__init__(tag, value, props=props)
