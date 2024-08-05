@@ -1,5 +1,6 @@
 from textnode import TextNode, split_nodes_delimiter
 from htmlnode import HTMLNode, LeafNode, ParentNode
+from markdown import extract_markdown_links, extract_markdown_images
 
 
 def main():
@@ -28,9 +29,7 @@ def main():
     h_node = HTMLNode()
     leaf_node = LeafNode(tag="a", props=test_props, value="some text here")
 
-    print("This is code block` word".split("`"))
+    print(extract_markdown_images("This is text with a ![rick roll](https://i.imgur.com/aKaOqIh.gif) and ![obi wan](https://i.imgur.com/fJRm4Vk.jpeg)"))
+    print(extract_markdown_links("This is text with a link [to boot dev](https://www.boot.dev) and [to youtube](https://www.youtube.com/@bootdotdev)"))
 
-    node2 = TextNode("This is text with a `code block` word", "text")
-    new_nodes = split_nodes_delimiter([node2], "`", "code")
-    print(new_nodes)
 main()
