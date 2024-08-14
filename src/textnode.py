@@ -51,6 +51,7 @@ def split_nodes_delimiter(old_nodes, delimiter, text_type):
     new_nodes_list = []
 
     for old_node in old_nodes_copy:
+        flag = False
         if old_node.text_type != text_type_text:
             new_nodes_list.append(old_node)
         else:
@@ -84,7 +85,7 @@ def split_nodes_image(old_nodes):
                 new_nodes_list.append(TextNode(sections[0], "text"))
                 new_nodes_list.append(TextNode(image_alt, "image", image_link))
     return new_nodes_list
-
+#bug where the text after a link is not kept after extracting the link
 def split_nodes_link(old_nodes):
     old_nodes_copy = old_nodes.copy()
     new_nodes_list = []
@@ -101,3 +102,13 @@ def split_nodes_link(old_nodes):
                 new_nodes_list.append(TextNode(sections[0], "text"))
                 new_nodes_list.append(TextNode(link_text, "link", link_dest))
     return new_nodes_list
+
+def text_to_textnodes(text):
+    nodes_list = [TextNode(text, "text")]
+    nodes_list = split_nodes_delimiter(nodes_list, "**", "bold")
+    nodes_list = split_nodes_delimiter(nodes_list, "*", "italic")
+    nodes_list = split_nodes_delimiter(nodes_list, "`", "code")
+    nodes_list = split_nodes_image(nodes_list)
+    nodes_list = split_nodes_link(nodes_list)
+    
+    return nodes_list
