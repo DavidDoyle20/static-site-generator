@@ -1,6 +1,6 @@
 import unittest
 
-from textnode import TextNode, text_node_to_html_node, split_nodes_delimiter
+from textnode import TextNode, text_node_to_html_node, split_nodes_delimiter, split_nodes_image, split_nodes_link
 from htmlnode import HTMLNode
 
 
@@ -112,6 +112,57 @@ class TestTextNode(unittest.TestCase):
         self.assertEqual(new_nodes, [TextNode("code", "code"),
                                      TextNode(" This is text with a ", "text"),
                                      TextNode("code", "code")])
+        
+    #tests for split_nodes_image
+    def test_split_nodes_image_default(self):
+        node = TextNode("This is text with a ![rick roll](https://i.imgur.com/aKaOqIh.gif)", "text")
+        correct_nodes = [
+            TextNode("This is text with a ", "text"),
+            TextNode("rick roll", "image", "https://i.imgur.com/aKaOqIh.gif")
+        ]
+        nodes = split_nodes_image([node])
+        self.assertEqual(nodes, correct_nodes)
+        
+    def test_split_nodes_image_multiple(self):
+        node = TextNode("This is text with a ![rick roll](https://i.imgur.com/aKaOqIh.gif) and ![obi wan](https://i.imgur.com/fJRm4Vk.jpeg)", "text")
+        correct_nodes = [
+            TextNode("This is text with a ", "text"),
+            TextNode("rick roll", "image", "https://i.imgur.com/aKaOqIh.gif"),
+            TextNode(" and ", "text"),
+            TextNode("obi wan", "image", "https://i.imgur.com/fJRm4Vk.jpeg")
+        ]
+        nodes = split_nodes_image([node])
+        self.assertEqual(nodes, correct_nodes)
+    def test_split_nodes_image_none(self):
+        node = TextNode("This has no images", "text")
+        self.assertEqual(split_nodes_image([node]), [node])
+    def test_split_nodes_image_empty(self):
+        self.assertEqual(split_nodes_image([]), [])
+    #tests for split_nodes_link
+    def test_split_nodes_link_default(self):
+        node = TextNode("This is text with a link [to boot dev](https://www.boot.dev)", "text")
+        correct_nodes = [
+            TextNode("This is text with a link ", "text"),
+            TextNode("to boot dev", "link", "https://www.boot.dev")
+        ]
+        nodes = split_nodes_link([node])
+        self.assertEqual(nodes, correct_nodes)
+        
+    def test_split_nodes_link_multiple(self):
+        node = TextNode("This is text with a link [to boot dev](https://www.boot.dev) and [to youtube](https://www.youtube.com/@bootdotdev)", "text")
+        correct_nodes = [
+            TextNode("This is text with a link ", "text"),
+            TextNode("to boot dev", "link", "https://www.boot.dev"),
+            TextNode(" and ", "text"),
+            TextNode("to youtube", "link", "https://www.youtube.com/@bootdotdev")
+        ]
+        nodes = split_nodes_link([node])
+        self.assertEqual(nodes, correct_nodes)
+    def test_split_nodes_link_none(self):
+        node = TextNode("This has no links", "text")
+        self.assertEqual(split_nodes_link([node]), [node])
+    def test_split_nodes_link_empty(self):
+        self.assertEqual(split_nodes_link([]), [])
 
 if __name__ == "__main__":
     unittest.main()
