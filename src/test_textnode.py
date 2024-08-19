@@ -1,6 +1,6 @@
 import unittest
 
-from textnode import TextNode, text_node_to_html_node, split_nodes_delimiter, split_nodes_image, split_nodes_link
+from textnode import TextNode, text_node_to_html_node, split_nodes_delimiter, split_nodes_image, split_nodes_link, extract_markdown_images, extract_markdown_links 
 from htmlnode import HTMLNode
 
 
@@ -163,6 +163,7 @@ class TestTextNode(unittest.TestCase):
         self.assertEqual(split_nodes_link([node]), [node])
     def test_split_nodes_link_empty(self):
         self.assertEqual(split_nodes_link([]), [])
+
 
 if __name__ == "__main__":
     unittest.main()
