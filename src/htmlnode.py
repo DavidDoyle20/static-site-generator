@@ -21,6 +21,13 @@ class HTMLNode:
     def __eq__(self, other_node):
         return self.tag == other_node.tag and self.value == other_node.value and self.children == other_node.children and self.props == other_node.props
     
+    def to_string(self):
+        return_string = (f"HTMLNode {self.tag}, {self.value}, {self.props} (")
+        for child in self.children:
+            return_string += f"\n - {self.to_string(child)}"
+        
+        return return_string
+    
 class LeafNode(HTMLNode):
     def __init__(self, tag, value, props=None):
         super().__init__(tag, value, props=props)

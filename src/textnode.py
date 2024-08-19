@@ -1,5 +1,6 @@
 from htmlnode import LeafNode
-from markdown import extract_markdown_images, extract_markdown_links
+import re
+
 class TextNode:
     def __init__(self, text, text_type, url=None):
         self.text = text
@@ -112,3 +113,9 @@ def text_to_textnodes(text):
     nodes_list = split_nodes_link(nodes_list)
     
     return nodes_list
+
+#returns a tuple containing the alternate text and the link
+def extract_markdown_images(text):
+    return(re.findall(r"!\[(.*?)\]\((.*?)\)",text))
+def extract_markdown_links(text):
+    return(re.findall(r"\[(.*?)\]\((.*?)\)", text))
