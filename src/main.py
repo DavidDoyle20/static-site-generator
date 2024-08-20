@@ -1,7 +1,29 @@
 from textnode import TextNode, split_nodes_delimiter, split_nodes_image, split_nodes_link, text_to_textnodes
 from htmlnode import HTMLNode, LeafNode, ParentNode
 from markdown import markdown_to_blocks, block_to_block_type, markdown_to_html_node
+import pathlib
+import os
+import shutil
 
+def copy_file(source, destination):
+    print(source, destination)
+    if os.path.exists(destination):
+        shutil.rmtree(destination)
+    if not os.path.exists(source):
+        raise Exception("soure does not exist!")
+    else:
+        if os.path.isfile(source):
+            print("copied ", source, destination)
+            shutil.copy(source, destination)
+        else:
+            os.mkdir(destination)
+            files = os.listdir(source)
+            for file in files:
+                print(" ",file, os.path.isfile(file))
+                if os.path.isfile(file):
+                    shutil.copy(source, destination)
+                else: # file is a directory
+                    copy_file(os.path.join(source, file), os.path.join(destination, file))
 
 def main():
     text = """# Heading Level 1
@@ -33,10 +55,8 @@ def main():
 # Code block in Python
 def hello_world():
     print("Hello, world!")```"""
-    markdown_to_html_node(text)
+    #markdown_to_html_node(text)
+    copy_file("static", "public")
 
-    # Write a recursive fuction that copies all the contents from a source directory to a destination directory
-    #   1. Delete all the contensts of the destination directory to ensure that the copy is clean
-    #   2. Then it should copy all files and subdirectories, nested files, etc.
-    #   3. 
 main()
+
