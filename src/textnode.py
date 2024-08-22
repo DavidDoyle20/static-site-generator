@@ -85,8 +85,10 @@ def split_nodes_image(old_nodes):
                 original_text = sections[1]
                 new_nodes_list.append(TextNode(sections[0], "text"))
                 new_nodes_list.append(TextNode(image_alt, "image", image_link))
+                split_nodes_image([TextNode(original_text, "text")])
+            new_nodes_list.append(TextNode(sections[1], "text"))
     return new_nodes_list
-#bug where the text after a link is not kept after extracting the link
+
 def split_nodes_link(old_nodes):
     old_nodes_copy = old_nodes.copy()
     new_nodes_list = []
@@ -102,6 +104,8 @@ def split_nodes_link(old_nodes):
                 original_text = sections[1]
                 new_nodes_list.append(TextNode(sections[0], "text"))
                 new_nodes_list.append(TextNode(link_text, "link", link_dest))
+                split_nodes_link([TextNode(original_text, "text")])
+            new_nodes_list.append(TextNode(sections[1], "text"))
     return new_nodes_list
 
 def text_to_textnodes(text):
